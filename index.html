@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGENTE LDM - Livre De Manipulação</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@300;500;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #001f3f 0%, #003d7a 50%, #001a33 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: linear-gradient(135deg, rgba(0, 61, 122, 0.95), rgba(0, 31, 63, 0.95));
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.3);
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px solid rgba(0, 255, 65, 0.3);
+        }
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00ff41;
+            font-size: 3.5em;
+            text-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
+            letter-spacing: 3px;
+        }
+        .header .subtitle {
+            color: #ffdf00;
+            font-size: 1.4em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .patriot-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #009c3b 0%, #ffdf00 50%, #002776 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1em;
+            margin-top: 20px;
+            font-weight: 700;
+        }
+        .mission-statement {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 223, 0, 0.1));
+            border: 2px solid #ff0000;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+        }
+        .mission-statement h2 {
+            color: #ff0000;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .mission-statement p {
+            color: #ffffff;
+            font-size: 1.2em;
+            line-height: 1.8;
+            text-align: center;
+            font-weight: 500;
+        }
+        .input-section {
+            background: linear-gradient(135deg, rgba(0, 61, 122, 0.9), rgba(0, 31, 63, 0.9));
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.2);
+            margin-bottom: 30px;
+            border: 2px solid rgba(0, 255, 65, 0.3);
+        }
+        .input-section h2 {
+            color: #00ff41;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+        .input-group {
+            margin-bottom: 25px;
+        }
+        .input-group label {
+            display: block;
+            color: #ffdf00;
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid rgba(0, 255, 65, 0.4);
+            border-radius: 10px;
+            font-size: 1.1em;
+            background: rgba(0, 20, 40, 0.8);
+            color: #00ff41;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .input-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        .analyze-btn {
+            background: linear-gradient(135deg, #009c3b, #00ff41);
+            color: #001f3f;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.4em;
+            font-weight: 900;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.6);
+        }
+        .analyze-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 50px rgba(0, 255, 65, 1);
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            display: none;
+        }
+        .spinner {
+            border: 5px solid rgba(0, 255, 65, 0.2);
+            border-top: 5px solid #00ff41;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading p {
+            color: #00ff41;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+        .results { display: none; }
+        .alert-card {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(139, 0, 0, 0.2));
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.4);
+            margin-bottom: 25px;
+            border: 3px solid #ff0000;
+        }
+        .alert-card h3 {
+            color: #ff0000;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 20px;
+            font-size: 2em;
+            text-align: center;
+        }
+        .threat-level {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 2px solid #ff0000;
+        }
+        .threat-label {
+            font-size: 1.8em;
+            font-weight: 900;
+            color: #ff0000;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .threat-percentage {
+            font-size: 3em;
+            font-weight: 900;
+            color: #ff0000;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .result-card {
+            background: linear-gradient(135deg, rgba(0, 61, 122, 0.9), rgba(0, 31, 63, 0.9));
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.2);
+            margin-bottom: 25px;
+            border: 2px solid rgba(0, 255, 65, 0.3);
+        }
+        .result-card h3 {
+            color: #ffdf00;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .analysis-text {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #00ff41;
+            margin-bottom: 20px;
+        }
+        .analysis-text p {
+            color: #ffffff;
+            line-height: 1.8;
+            font-size: 1.15em;
+        }
+        .evidence-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .evidence-tag {
+            background: linear-gradient(135deg, #ff0000, #8b0000);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.95em;
+            font-weight: 700;
+        }
+        .counterpoints {
+            background: linear-gradient(135deg, rgba(0, 156, 59, 0.2), rgba(0, 61, 122, 0.2));
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #00ff41;
+        }
+        .counterpoints h4 {
+            color: #00ff41;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .counterpoints ul { list-style: none; }
+        .counterpoints li {
+            color: #ffffff;
+            margin-bottom: 18px;
+            line-height: 1.8;
+            font-size: 1.1em;
+            padding-left: 35px;
+            position: relative;
+        }
+        .counterpoints li::before {
+            content: '🛡️';
+            position: absolute;
+            left: 0;
+        }
+        .trusted-sources {
+            background: linear-gradient(135deg, rgba(0, 156, 59, 0.3), rgba(0, 255, 65, 0.1));
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #00ff41;
+            margin-top: 20px;
+        }
+        .trusted-sources h4 {
+            color: #00ff41;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        .trusted-sources p {
+            color: #ffffff;
+            font-size: 1.05em;
+            margin-bottom: 15px;
+        }
+        .source-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .source-item {
+            background: rgba(0, 255, 65, 0.2);
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .stats-bar {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+        }
+        .stats-bar p {
+            color: #00ff41;
+            margin: 8px 0;
+            font-size: 1.05em;
+        }
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 40px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ AGENTE LDM ⚡</h1>
+            <div class="subtitle">Livre De Manipulação</div>
+            <div class="patriot-badge">🇧🇷 TECNOLOGIA PATRIOTA BRASILEIRA 🇧🇷</div>
+        </div>
+
+        <div class="mission-statement">
+            <h2>🚨 MISSÃO DO AGENTE LDM</h2>
+            <p>
+                <strong>Se você é de DIREITA e NÃO ACREDITA em mais nada do que a GRANDE MÍDIA diz:</strong><br><br>
+                O Agente LDM detecta quando notícias foram escritas com viés ESQUERDISTA.<br>
+                Receba argumentos para analisar criticamente e NUNCA MAIS cair na MANIPULAÇÃO.<br><br>
+                <strong>Com o Agente LDM, você será SEMPRE LIVRE! 🇧🇷</strong>
+            </p>
+        </div>
+
+        <div class="input-section">
+            <h2>🔍 ANÁLISE DE NOTÍCIA</h2>
+
+            <div class="input-group">
+                <label>🌐 QUAL O NOME DO PORTAL?</label>
+                <input type="text" id="portalName" placeholder="Ex: Jovem Pan, G1, Carta Capital, Gazeta...">
+            </div>
+
+            <div class="input-group">
+                <label>📄 COLE O TEXTO COMPLETO:</label>
+                <textarea id="newsText" placeholder="Cole aqui TODO o texto da notícia..."></textarea>
+            </div>
+
+            <button class="analyze-btn" onclick="analisar()">⚡ ANALISAR AGORA ⚡</button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>ANALISANDO...</p>
+        </div>
+
+        <div class="results" id="results">
+            <div class="alert-card">
+                <h3>⚠️ NÍVEL DE AMEAÇA</h3>
+                <div class="threat-level">
+                    <div class="threat-label" id="threatLabel">...</div>
+                    <div class="threat-percentage" id="threatPercentage">0%</div>
+                </div>
+                <div class="analysis-text">
+                    <p id="analysis"></p>
+                    <div class="evidence-tags" id="evidenceTags"></div>
+                    <div class="stats-bar" id="statsBar"></div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <h3>🛡️ CONTRAPONTOS</h3>
+                <div class="counterpoints">
+                    <h4>ARGUMENTOS FACTUAIS:</h4>
+                    <ul id="counterpoints"></ul>
+                </div>
+                
+                <div class="trusted-sources">
+                    <h4>✅ FONTES CONFIÁVEIS</h4>
+                    <p>Compare com:</p>
+                    <div class="source-list">
+                        <span class="source-item">Gazeta do Povo</span>
+                        <span class="source-item">Jovem Pan</span>
+                        <span class="source-item">Revista Oeste</span>
+                        <span class="source-item">Brasil Paralelo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <strong>🇧🇷 AGENTE LDM - Mantenha-se Livre! 🇧🇷</strong>
+        </div>
+    </div>
+
+    <script>
+        var portais = {
+            esquerda: ['carta capital', 'brasil 247', 'folha', 'estadao', 'uol', 'g1', 'globo', 'intercept', 'forum'],
+            direita: ['jovem pan', 'gazeta', 'oeste', 'brasil paralelo', 'terca livre', 'antagonista'],
+            centro: ['cnn', 'band', 'reuters']
+        };
+
+        var termos = [
+            {t: 'genocida', w: 10}, {t: 'genocídio', w: 10}, {t: 'fora bolsonaro', w: 10},
+            {t: 'cpi do genocídio', w: 9}, {t: 'cpi da covid', w: 8}, {t: '600 mil mortes', w: 8},
+            {t: 'golpe', w: 7}, {t: 'golpista', w: 7}, {t: 'ditadura', w: 7},
+            {t: 'fascismo', w: 8}, {t: 'fascista', w: 8}, {t: 'autoritarismo', w: 7},
+            {t: 'extrema direita', w: 7}, {t: 'ultradireita', w: 7},
+            {t: 'ataque à democracia', w: 7}, {t: 'negacionista', w: 6},
+            {t: 'cloroquina', w: 5}, {t: 'milícia', w: 6}, {t: 'fake news', w: 5},
+            {t: 'desmonte', w: 5}, {t: 'desigualdade social', w: 4},
+            {t: 'lgbtqia+', w: 4}, {t: 'racismo estrutural', w: 4}
+        ];
+
+        function getTipo(nome) {
+            nome = nome.toLowerCase();
+            for (var key in portais) {
+                for (var i = 0; i < portais[key].length; i++) {
+                    if (nome.indexOf(portais[key][i]) !== -1) {
+                        return key;
+                    }
+                }
+            }
+            return 'desconhecido';
+        }
+
+        function analisar() {
+            var portal = document.getElementById('portalName').value.trim();
+            var texto = document.getElementById('newsText').value.trim();
+            
+            if (!portal) {
+                alert('Digite o nome do portal!');
+                return;
+            }
+            if (!texto || texto.length < 100) {
+                alert('Cole o texto completo da notícia (mínimo 100 caracteres)!');
+                return;
+            }
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+
+            setTimeout(function() {
+                var resultado = processar(texto, portal);
+                mostrar(resultado);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('results').style.display = 'block';
+            }, 2000);
+        }
+
+        function processar(texto, nomePortal) {
+            var tipo = getTipo(nomePortal);
+            var multiplicador = tipo === 'direita' ? 0.3 : tipo === 'esquerda' ? 1.5 : 1;
+            var pontos = 0;
+            var achados = [];
+
+            for (var i = 0; i < termos.length; i++) {
+                var regex = new RegExp(termos[i].t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+                var matches = texto.match(regex);
+                if (matches) {
+                    var p = termos[i].w * multiplicador * matches.length * 1.5;
+                    pontos += p;
+                    achados.push({
+                        termo: termos[i].t,
+                        peso: termos[i].w,
+                        vezes: matches.length,
+                        pontos: p
+                    });
+                }
+            }
+
+            var pct = Math.min(100, Math.round(pontos * 1.5));
+            var nivel, msg, args;
+
+            if (pontos < 8) {
+                nivel = '✅ BAIXO RISCO';
+                msg = 'Baixo risco. Portal: ' + (tipo === 'direita' ? 'CONFIÁVEL' : tipo === 'esquerda' ? 'ESQUERDISTA' : 'DESCONHECIDO');
+                args = ['Sempre verifique a fonte', 'Analise omissões', 'Compare versões'];
+            } else {
+                nivel = '🚨 ALTO RISCO';
+                msg = 'ATENÇÃO! Portal ' + (tipo === 'esquerda' ? 'ESQUERDISTA' : tipo === 'direita' ? 'DE DIREITA (linguagem suspeita)' : 'DESCONHECIDO') + '. Detectado ' + pct + '% de viés. ' + achados.length + ' termo(s) encontrado(s).';
+                args = [
+                    'Termos graves exigem PROVAS JUDICIAIS',
+                    'Brasil teve taxa similar a países desenvolvidos',
+                    'CPIs são políticas, não tribunais',
+                    'R$ 600 bi em auxílio para 68 milhões',
+                    'Por que governadores de esquerda não são cobrados?',
+                    'Verifique filiações do autor'
+                ];
+            }
+
+            return {
+                nivel: nivel,
+                pct: pct,
+                msg: msg,
+                achados: achados,
+                args: args,
+                pontos: pontos.toFixed(1),
+                tipo: tipo
+            };
+        }
+
+        function mostrar(r) {
+            document.getElementById('threatLabel').textContent = r.nivel;
+            document.getElementById('threatPercentage').textContent = r.pct + '%';
+            document.getElementById('analysis').textContent = r.msg;
+
+            var divEv = document.getElementById('evidenceTags');
+            divEv.innerHTML = '';
+            if (r.achados.length > 0) {
+                var titulo = document.createElement('p');
+                titulo.innerHTML = '<strong style="color: #ff0000; display: block; margin: 20px 0 15px 0;">EVIDÊNCIAS:</strong>';
+                divEv.appendChild(titulo);
+                
+                r.achados.sort(function(a, b) { return b.pontos - a.pontos; }).slice(0, 15).forEach(function(item) {
+                    var tag = document.createElement('span');
+                    tag.className = 'evidence-tag';
+                    tag.textContent = item.termo.toUpperCase() + (item.vezes > 1 ? ' (x' + item.vezes + ')' : '');
+                    divEv.appendChild(tag);
+                });
+            }
+
+            document.getElementById('statsBar').innerHTML = 
+                '<p><strong>ESTATÍSTICAS:</strong></p>' +
+                '<p>• Pontuação: ' + r.pontos + ' pts</p>' +
+                '<p>• Termos: ' + r.achados.length + '</p>' +
+                '<p>• Portal: ' + r.tipo.toUpperCase() + '</p>';
+
+            var ul = document.getElementById('counterpoints');
+            ul.innerHTML = '';
+            r.args.forEach(function(arg) {
+                var li = document.createElement('li');
+                li.textContent = arg;
+                ul.appendChild(li);
+            });
+
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
